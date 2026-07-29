@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>家計簿アプリ</title>
+</head>
+
+<body>
+    <h1>家計簿アプリへようこそ</h1>
+
+    <form action="/register" method="post">
+        <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+        <div>
+            <label for="expenseName">支出名</label>
+            <input type="text" id="expenseName" name="expenseName" th:value="${enteredExpenseName}">
+        </div>
+
+        <div>
+            <label for="amount">金額</label>
+            <input type="number" id="amount" name="amount" th:value="${enteredAmount}" min="1" required>
+        </div>
+
+        <div>
+            <label for="category">カテゴリ</label>
+
+            <select id="category" name="category" required>
+                <option value="">選択してください</option>
+                <option value="食費" th:selected="${enteredCategory == '食費'}">食費</option>
+                <option value="交通費" th:selected="${enteredCategory == '交通費'}">交通費</option>
+                <option value="趣味" th:selected="${enteredCategory == '趣味'}">趣味</option>
+                <option value="日用品" th:selected="${enteredCategory == '日用品'}">日用品</option>
+                <option value="その他" th:selected="${enteredCategory == 'その他'}">その他</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="expenseDate">支出日</label>
+            <input type="date" id="expenseDate" name="expenseDate"
+                th:value="${enteredExpenseDate != null ? enteredExpenseDate : today}" required>
+        </div>
+
+        <button type="submit">登録</button>
+    </form>
+
+    <hr>
+
+    <h2>月間予算の設定</h2>
+
+    <form action="/budget/register" method="post">
+        <div>
+            <label for="budgetMonth">対象月</label>
+            <input type="month" id="budgetMonth" name="budgetMonth" th:value="${currentMonth}" required>
+        </div>
+
+        <div>
+            <label for="budgetAmount">予算額</label>
+            <input type="number" id="budgetAmount" name="amount" min="1" required>
+        </div>
+
+        <button type="submit">予算を保存</button>
+    </form>
+</body>
+
+</html>

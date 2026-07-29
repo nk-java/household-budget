@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登録結果</title>
+</head>
+
+<body>
+    <h1>登録結果</h1>
+
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+    <p th:if="${expenseName != null}">
+        <span th:text="${expenseName}"></span>：
+        <span th:text="${amount}"></span>円を登録しました
+    </p>
+
+    <h2>支出一覧</h2>
+
+    <form th:action="@{/filter}" method="get">
+        <label for="categoryFilter">カテゴリで絞り込み</label>
+
+        <select id="categoryFilter" name="category">
+            <option value="" th:selected="${selectedCategory == null || selectedCategory == ''}">すべて</option>
+            <option value="食費" th:selected="${selectedCategory == '食費'}">食費</option>
+            <option value="交通費" th:selected="${selectedCategory == '交通費'}">交通費</option>
+            <option value="趣味" th:selected="${selectedCategory == '趣味'}">趣味</option>
+            <option value="日用品" th:selected="${selectedCategory == '日用品'}">日用品</option>
+            <option value="その他" th:selected="${selectedCategory == 'その他'}">その他</option>
+        </select>
+
+        <label for="dateFilter">支出日で絞り込み</label>
+
+        <input type="date" id="dateFilter" name="expenseDate" th:value="${selectedDate}">
+
+        <label for="monthFilter">月で絞り込み</label>
+
+        <input type="month" id="monthFilter" name="expenseMonth" th:value="${selectedExpenseMonth}">
+
+        <button type="submit">絞り込む</button>
+    </form>
+
+    <ul>
+        <li th:each="expense : ${expenses}">
+            <span th:text="${expense.expenseDate}"></span>
+            ：
+            <span th:text="${expense.category}"></span>
+            ：
+            <span th:text="${expense.expenseName}"></span>
+            ：
+            <span th:text="${#numbers.formatInteger(expense.amount, 1, 'COMMA')}"></span>円
+
+            <a th:href="@{/edit(id=${expense.id})}">編集</a>
+            <a th:href="@{/detail(id=${expense.id})}">詳細</a>
+
+            <form th:action="@{/delete}" method="post" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+                <input type="hidden" name="id" th:value="${expense.id}">
+                <button type="submit">削除</button>
+            </form>
+        </li>
+    </ul>
+
+    <p>
+        合計：
+        <span th:text="${#numbers.formatInteger(total, 1, 'COMMA')}"></span>円
+    </p>
+
+    <div th:if="${budgetAmount != null}">
+        <h2>月間予算</h2>
+
+        <p>
+            対象月：
+            <span th:text="${selectedMonth}"></span>
+        </p>
+
+        <p>
+            予算：
+            <span th:text="${#numbers.formatInteger(budgetAmount, 1, 'COMMA')}"></span>円
+        </p>
+
+        <p>
+            使用額：
+            <span th:text="${#numbers.formatInteger(monthlyExpenseTotal, 1, 'COMMA')}"></span>円
+        </p>
+
+        <p>
+            残り：
+            <span th:text="${#numbers.formatInteger(remainingBudget, 1, 'COMMA')}"
+                th:style="${remainingBudget < 0} ? 'color:red; font-weight:bold;' : ''">
+            </span>円
+        </p>
+    </div>
+
+    <div th:if="${budgetNotSet}">
+        <h2>月間予算</h2>
+
+        <p>
+            <span th:text="${selectedMonth}"></span>
+            の予算はまだ設定されていません。
+        </p>
+    </div>
+
+    <div th:if="${categoryTotals != null}">
+        <h2>カテゴリ別合計</h2>
+
+        <ul>
+            <li th:each="entry : ${categoryTotals}">
+                <span th:text="${entry.key}"></span>
+                ：
+                <span th:text="${#numbers.formatInteger(entry.value, 1, 'COMMA')}"></span>円
+            </li>
+        </ul>
+    </div>
+
+    <a href="/">トップページに戻る</a>
+</body>
+
+</html>

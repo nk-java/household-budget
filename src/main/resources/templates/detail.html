@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>支出詳細</title>
+</head>
+
+<body>
+    <h1>支出詳細</h1>
+
+    <p>
+        支出名：
+        <span th:text="${expense.expenseName}"></span>
+    </p>
+
+    <p>
+        金額：
+        <span th:text="${#numbers.formatInteger(expense.amount, 1, 'COMMA')}"></span>円
+    </p>
+
+    <p>
+        カテゴリ：
+        <span th:text="${expense.category}"></span>
+    </p>
+
+    <p>
+        支出日：
+        <span th:text="${expense.expenseDate}"></span>
+    </p>
+
+    <a th:href="@{/edit(id=${expense.id})}">この支出を編集する</a>
+    <a href="/result">支出一覧に戻る</a>
+</body>
+
+</html>
