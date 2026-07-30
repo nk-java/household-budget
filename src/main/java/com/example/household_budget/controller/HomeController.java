@@ -18,6 +18,10 @@ import com.example.household_budget.repository.MonthlyBudgetRepository;
 import com.example.household_budget.model.MonthlyBudget;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.household_budget.service.MonthlyBudgetService;
+import com.example.household_budget.form.ExpenseForm;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class HomeController {
@@ -33,6 +37,11 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+
+        ExpenseForm expenseForm = new ExpenseForm();
+        expenseForm.setExpenseDate(LocalDate.now());
+
+        model.addAttribute("expenseForm", expenseForm);
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("currentMonth", YearMonth.now());
 
@@ -41,69 +50,39 @@ public class HomeController {
 
     @PostMapping("/register")
     public String register(
-            @RequestParam String expenseName,
-            @RequestParam(required = false) Integer amount,
-            @RequestParam String category,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate expenseDate,
+            @Valid
+            @ModelAttribute("expenseForm")
+            ExpenseForm expenseForm,
+            BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        if (expenseName == null || expenseName.trim().isEmpty()) {
-            model.addAttribute("errorMessage", "支出名を入力してください");
+        if (bindingResult.hasErrors()) {
             model.addAttribute("today", LocalDate.now());
             model.addAttribute("currentMonth", YearMonth.now());
 
-            model.addAttribute("enteredCategory", category);
-            model.addAttribute("enteredAmount", amount);
-            model.addAttribute("enteredExpenseDate", expenseDate);
             return "index";
         }
 
-        if (category == null || category.trim().isEmpty()) {
-            model.addAttribute("errorMessage", "カテゴリを選択してください");
-            model.addAttribute("today", LocalDate.now());
-            model.addAttribute("currentMonth", YearMonth.now());
+        Expense expense = new Expense(
+            expenseForm.getExpenseName(),
+            expenseForm.getAmount(),
+            expenseForm.getCategory());
 
-            model.addAttribute("enteredExpenseName", expenseName);
-            model.addAttribute("enteredCategory", category);
-            model.addAttribute("enteredAmount", amount);
-            model.addAttribute("enteredExpenseDate", expenseDate);
-            return "index";
-        }
+        expense.setExpenseDate(expenseForm.getExpenseDate());
 
-        if (expenseDate == null) {
-            model.addAttribute("errorMessage", "支出日を入力してください");
-            model.addAttribute("today", LocalDate.now());
-            model.addAttribute("currentMonth", YearMonth.now());
-
-            model.addAttribute("enteredExpenseName", expenseName);
-            model.addAttribute("enteredCategory", category);
-            model.addAttribute("enteredAmount", amount);
-            model.addAttribute("enteredExpenseDate", expenseDate);
-            return "index";
-        }
-
-        if (amount == null || amount <= 0) {
-            model.addAttribute("errorMessage", "金額は1円以上で入力してください");
-            model.addAttribute("today", LocalDate.now());
-            model.addAttribute("currentMonth", YearMonth.now());
-
-            model.addAttribute("enteredExpenseName", expenseName);
-            model.addAttribute("enteredCategory", category);
-            model.addAttribute("enteredAmount", amount);
-            model.addAttribute("enteredExpenseDate", expenseDate);
-            return "index";
-        }
-
-        Expense expense = new Expense(expenseName, amount, category);
-        expense.setExpenseDate(expenseDate);
         expenseRepository.save(expense);
 
-        String formattedAmount = String.format("%,d", amount);
+        String formattedAmount =
+                String.format("%,d", expenseForm.getAmount());
 
-        redirectAttributes.addFlashAttribute("expenseName", expenseName);
-        redirectAttributes.addFlashAttribute("amount", formattedAmount);
+        redirectAttributes.addFlashAttribute(
+            "expenseName",
+            expenseForm.getExpenseName());
+
+        redirectAttributes.addFlashAttribute(
+            "amount",
+            formattedAmount);
 
         return "redirect:/result";
     }
