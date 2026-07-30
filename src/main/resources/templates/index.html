@@ -9,36 +9,43 @@
 <body>
     <h1>家計簿アプリへようこそ</h1>
 
-    <form action="/register" method="post">
-        <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+    <form th:action="@{/register}" th:object="${expenseForm}" method="post">
 
         <div>
             <label for="expenseName">支出名</label>
-            <input type="text" id="expenseName" name="expenseName" th:value="${enteredExpenseName}">
+            <input type="text" id="expenseName" th:field="*{expenseName}">
+
+            <p th:if="${#fields.hasErrors('expenseName')}" th:errors="*{expenseName}" style="color:red;"></p>
         </div>
 
         <div>
             <label for="amount">金額</label>
-            <input type="number" id="amount" name="amount" th:value="${enteredAmount}" min="1" required>
+            <input type="number" id="amount" th:field="*{amount}" min="1" required>
+
+            <p th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" style="color:red;"></p>
         </div>
 
         <div>
             <label for="category">カテゴリ</label>
 
-            <select id="category" name="category" required>
+            <select id="category" th:field="*{category}" required>
+
                 <option value="">選択してください</option>
-                <option value="食費" th:selected="${enteredCategory == '食費'}">食費</option>
-                <option value="交通費" th:selected="${enteredCategory == '交通費'}">交通費</option>
-                <option value="趣味" th:selected="${enteredCategory == '趣味'}">趣味</option>
-                <option value="日用品" th:selected="${enteredCategory == '日用品'}">日用品</option>
-                <option value="その他" th:selected="${enteredCategory == 'その他'}">その他</option>
+                <option value="食費">食費</option>
+                <option value="交通費">交通費</option>
+                <option value="趣味">趣味</option>
+                <option value="日用品">日用品</option>
+                <option value="その他">その他</option>
             </select>
+
+            <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}" style="color:red;"></p>
         </div>
 
         <div>
             <label for="expenseDate">支出日</label>
-            <input type="date" id="expenseDate" name="expenseDate"
-                th:value="${enteredExpenseDate != null ? enteredExpenseDate : today}" required>
+            <input type="date" id="expenseDate" th:field="*{expenseDate}" required>
+
+            <p th:if="${#fields.hasErrors('expenseDate')}" th:errors="*{expenseDate}" style="color:red;"></p>
         </div>
 
         <button type="submit">登録</button>
