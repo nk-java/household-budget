@@ -75,7 +75,7 @@ GitHubへのpushやPull Requestを契機にMavenで自動テストを実行し�
 1. リポジトリをクローンします。
 
 ```bash
-git clone https://github.com/1643zzz-star/household-budget.git
+git clone https://github.com/nk-java/household-budget.git
 ```
 
 2. プロジェクトのフォルダへ移動します。
