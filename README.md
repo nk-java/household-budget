@@ -8,6 +8,14 @@
 
 Spring Bootを使用して開発し、月予算処理におけるController・Service・Repositoryの責務分離、Bean Validationによる入力値検証、自動テスト、GitHub ActionsによるCIを実装しています。
 
+## 画面イメージ
+
+### 支出登録画面
+<img width="535" height="456" alt="image" src="https://github.com/user-attachments/assets/3845f97d-e482-4c50-88af-dfb4254eb444" />
+
+### 支出一覧・予算確認画面
+<img width="865" height="344" alt="image" src="https://github.com/user-attachments/assets/5b7c2b88-7550-444f-905a-5f8b9b2b0d7a" />
+
 ## 主な機能
 
 - 支出の登録
