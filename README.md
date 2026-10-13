@@ -14,7 +14,8 @@ Spring Bootを使用して開発し、月予算処理におけるController・Se
 <img width="535" height="456" alt="image" src="https://github.com/user-attachments/assets/3845f97d-e482-4c50-88af-dfb4254eb444" />
 
 ### 支出一覧・予算確認画面
-<img width="865" height="344" alt="image" src="https://github.com/user-attachments/assets/5b7c2b88-7550-444f-905a-5f8b9b2b0d7a" />
+<img width="775" height="734" alt="image" src="https://github.com/user-attachments/assets/b9a97408-f280-44ad-9d34-204cbaf9d2fb" />
+
 
 ## 主な機能
 
